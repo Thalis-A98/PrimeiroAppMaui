@@ -26,14 +26,17 @@
                 </Image>
             </Grid>
         </Border>
+        <Label x:Name="LblError" TextColor="Red" IsVisible="False"/>
 
         <Grid RowDefinitions="Auto" ColumnDefinitions="*,*" Margin="30,0">
-            <RadioButton 
+            <RadioButton
+                x:Name="RBEditIncome"
                 IsChecked="True"                         
                 Content="Receita"
                 Grid.Row="0"
                 Grid.Column="0"/>
-            <RadioButton 
+            <RadioButton
+                x:Name="RBEditExpense"
                 Content="Despesa"
                 Grid.Row="0"
                 Grid.Column="1"
@@ -41,18 +44,22 @@
         </Grid>
 
         <Entry
+            x:Name="EntryNameEdit"
             FontSize="16"
             Placeholder="Descrição"
             Margin="15,0"/>
         <DatePicker
+            x:Name="DPDateEdit"
             FontSize="16"
             Margin="15,0"/>
         <Entry
+            x:Name="EntryValueEdit"
             FontSize="16"
             Placeholder="Valor"
             Margin="15,0"/>
 
         <Button
+            Clicked="btnSalvaEdicao"
             FontSize="16"
             Text="Salvar"
             Margin="15,0"/>

@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Messaging;
 using MauiApp1.Models;
 using MauiApp1.Repositories;
 using System.Text;
@@ -6,10 +7,11 @@ namespace MauiApp1.Views;
 
 public partial class TransactionAdd : ContentPage
 {
-	public TransactionAdd()
+    private ITransactionRepository _repository; 
+	public TransactionAdd(ITransactionRepository repository)
 	{
 		InitializeComponent();
-
+        _repository= repository;
 
 	}
 
@@ -27,6 +29,8 @@ public partial class TransactionAdd : ContentPage
 
         Navigation.PopModalAsync();
 
+        WeakReferenceMessenger.Default.Send<string>(string.Empty);
+
     }
 
     private void SalvarDados()
@@ -39,11 +43,7 @@ public partial class TransactionAdd : ContentPage
             Value = double.Parse(EntryValor.Text)
         };
 
-        var repository = this.Handler.MauiContext.Services.GetService<ITransactionRepository>();
-        repository.Add(transaction);
-
-        var count = repository.GetAll().Count();
-        App.Current.MainPage.DisplayAlert("Mensagem", $"Existem {count} Registros.", "OK");
+        _repository.Add(transaction);
     }
 
     private bool Validation()

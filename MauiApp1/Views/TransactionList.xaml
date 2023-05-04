@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:MauiApp1.Libraries.Converters"
              x:Class="MauiApp1.Views.TransactionList"
              NavigationPage.HasNavigationBar="False"
              Title="TransactionList">
+    <ContentPage.Resources>
+        <converters:TransactionValueConverter x:Key="TransactionValueConverter"/>
+        <converters:TransactionValueColorConverter x:Key="TransactionValueColorConverter"/>
+        
+        <converters:TransactionNameConverter x:Key="TransactionNameConverter"/>
+        <converters:TransactionNameColorConverter x:Key="TransactionNameColorConverter"/>
+    </ContentPage.Resources>
     <VerticalStackLayout>
         <CollectionView x:Name="ListTransactions">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="15" ColumnDefinitions="50,*, Auto">
-                        <Label
-                            BackgroundColor="White"
-                            FontSize="20"
-                            Text="S"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                NumberOfTapsRequired="2"
+                                Tapped="TapGestureRecognizer_TappedEdit"
+                                CommandParameter="{Binding .}">
+                            </TapGestureRecognizer>
+                        </Grid.GestureRecognizers>
+                        <Border
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            BackgroundColor="{Binding Name, Converter={StaticResource TransactionNameColorConverter}}"
+                            StrokeShape="RoundRectangle 20">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Tapped="TapGestureRecognizer_TappedDelete"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                            <Label
+                                FontSize="20"
+                                Text="{Binding Name, Converter={StaticResource TransactionNameConverter}}"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"/>
+                        </Border>
 
                         <VerticalStackLayout Grid.Column="1">
                             <Label Text="{Binding Name}"/>
@@ -23,16 +48,16 @@
 
                         <Label 
                             Grid.Column="2"
-                            Text="{Binding Value}"
+                            Text="{Binding .,Converter={StaticResource TransactionValueConverter}}"
                             VerticalOptions="Center"
-                            TextColor="{StaticResource Tertiary}"/>     
+                            TextColor="{Binding ., Converter= {StaticResource TransactionValueColorConverter}}"/>     
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
         
 
-        <Border Margin="10" BackgroundColor="{StaticResource Black}" StrokeThickness = "0" Padding="15"
+        <Border Margin="10" BackgroundColor="Black" StrokeThickness = "0" Padding="15"
                 StrokeShape="RoundRectangle 30">
             <Grid ColumnDefinitions="*, 80" RowDefinitions="auto, auto, 30, auto, auto" Padding="5">
                 <Label 
@@ -40,6 +65,7 @@
                     TextColor="#979797"
                     FontSize="18"/>
                 <Label 
+                    x:Name="lblSaldo"
                     Text="R$2.760,00" 
                     Grid.Row="1"
                     TextColor="White"
@@ -64,7 +90,7 @@
                     TextColor="#979797"
                     FontSize="8"/>
                 <Label 
-                    Text="R$3.600,00"
+                    x:Name="lblValueReceita"
                     Grid.Row="4"
                     TextColor="White"
                     FontSize="12"/>
@@ -79,7 +105,7 @@
                 <Label 
                     Grid.Row="4"
                     Grid.Column="1"
-                    Text="R$840,00"
+                    x:Name="lblValueDespesa"
                     TextColor="White"
                     FontSize="12"/>
             </Grid>
